@@ -1,6 +1,6 @@
 # DNA-Encoding-Decoding
  A Python project for compressing and error-correcting DNA sequences using Huffman encoding and Hamming codes.
-# DNA Encoding and Decoding
+
 # پروژه کدگذاری داده‌ها با استفاده از DNA و الگوریتم هافمن
 
 ## توضیحات کلی پروژه
@@ -26,6 +26,7 @@
 
 ## فایل‌ها و ساختار پروژه
 
+---
 │── 1.ipynb # الگوریتم کدگذاری هافمن
 │── 2.ipynb # محاسبه و تولید بیت‌های اضافی برای کدگذاری
 │── 3.ipynb # تجزیه و تحلیل داده‌ها و کدگذاری با استفاده از DNA
@@ -40,6 +41,7 @@
 │── mydict.json # دیکشنری احتمالات حروف
 │── encoding_dict.json # دیکشنری کدگذاری هافمن
 
+---
 ## نحوه اجرا
 
 ### پیش‌نیازها
