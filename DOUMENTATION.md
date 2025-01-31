@@ -18,6 +18,8 @@
 
 ### 📌 1. فشرده‌سازی داده و تحلیل فرکانس (`1.ipynb`)
 📌 **توابع اصلی:**
+
+**استخراج متن از فایل PDF:**
 ```python
 def extract_text_from_pdf(file_path):
     with open(file_path, 'rb') as file:
@@ -26,11 +28,12 @@ def extract_text_from_pdf(file_path):
     return text
 ```
 - `extract_text_from_pdf(file_path)`: خواندن و استخراج متن از PDF.
-- `calculate_character_frequencies(text)`: شمارش تعداد کاراکترها.
-- `build_huffman_tree(frequencies)`: ایجاد درخت هافمن.
 
+---
 ### 📌 2. کدگذاری هافمن و جدول احتمالات (`2.ipynb`)
 📌 **توابع اصلی:**
+
+**ایجاد دیکشنری کدگذاری هافمن:**
 ```python
 def create_huffman_encoding_dict(frequencies):
     heap = [[weight, [symbol, ""]] for symbol, weight in frequencies.items()]
@@ -45,18 +48,23 @@ def create_huffman_encoding_dict(frequencies):
 ```
 - `create_huffman_encoding_dict(frequencies)`: ایجاد دیکشنری کدگذاری.
 
+---
 ### 📌 3. تبدیل متن به DNA (`3.ipynb`)
 📌 **توابع اصلی:**
+
+**تبدیل رشته دودویی به DNA:**
 ```python
 def binary_to_dna(binary_sequence):
     mapping = {"00": "A", "01": "T", "10": "C", "11": "G"}
     return "".join([mapping[binary_sequence[i:i+2]] for i in range(0, len(binary_sequence), 2)])
 ```
-- `text_to_binary(text, encoding_dict)`: تبدیل متن به دودویی.
 - `binary_to_dna(binary_sequence)`: تبدیل داده‌ها به **DNA**.
 
+---
 ### 📌 4. نمایش درخت هافمن (`4.ipynb`)
 📌 **توابع اصلی:**
+
+**ساخت و نمایش گراف درخت هافمن:**
 ```python
 def build_huffman_tree_graph(tree):
     dot = graphviz.Digraph()
@@ -73,8 +81,11 @@ def build_huffman_tree_graph(tree):
 ```
 - `build_huffman_tree_graph(tree)`: نمایش گرافیکی درخت هافمن.
 
+---
 ### 📌 5. تشخیص و تصحیح خطا (`Main Retrieval.ipynb`)
 📌 **توابع اصلی:**
+
+**شناسایی و اصلاح خطا در داده‌های کدگذاری‌شده:**
 ```python
 def detect_and_correct_errors(encoded_data):
     error_position = 0
@@ -86,11 +97,13 @@ def detect_and_correct_errors(encoded_data):
         encoded_data[error_position - 1] = "0" if encoded_data[error_position - 1] == "1" else "1"
     return "".join(encoded_data)
 ```
-- `apply_hamming_code(data)`: اعمال کد همینگ.
 - `detect_and_correct_errors(encoded_data)`: شناسایی و اصلاح خطا.
 
+---
 ### 📌 6. ذخیره‌سازی نهایی داده‌ها (`main store.ipynb`)
 📌 **توابع اصلی:**
+
+**تقسیم داده‌های DNA به بخش‌های کوچک‌تر برای ذخیره‌سازی:**
 ```python
 def segment_dna_sequence(dna_sequence, segment_size):
     return [dna_sequence[i:i+segment_size] for i in range(0, len(dna_sequence), segment_size)]
@@ -101,4 +114,4 @@ def segment_dna_sequence(dna_sequence, segment_size):
 ## 👨‍💻 توسعه‌دهندگان
 📩 این پروژه به عنوان بخشی از **پایان‌نامه کارشناسی ارشد** درباره **ذخیره‌سازی داده در DNA** توسعه داده شده است.
 
-
+�
