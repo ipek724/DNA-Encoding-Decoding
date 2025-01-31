@@ -18,62 +18,87 @@
 
 ### 📌 1. فشرده‌سازی داده و تحلیل فرکانس (`1.ipynb`)
 📌 **توابع اصلی:**
+```python
+def extract_text_from_pdf(file_path):
+    with open(file_path, 'rb') as file:
+        reader = PyPDF2.PdfReader(file)
+        text = "".join([page.extract_text() for page in reader.pages])
+    return text
+```
 - `extract_text_from_pdf(file_path)`: خواندن و استخراج متن از PDF.
 - `calculate_character_frequencies(text)`: شمارش تعداد کاراکترها.
 - `build_huffman_tree(frequencies)`: ایجاد درخت هافمن.
-- `generate_huffman_codes(tree)`: تولید دیکشنری کدگذاری.
 
 ### 📌 2. کدگذاری هافمن و جدول احتمالات (`2.ipynb`)
 📌 **توابع اصلی:**
+```python
+def create_huffman_encoding_dict(frequencies):
+    heap = [[weight, [symbol, ""]] for symbol, weight in frequencies.items()]
+    heapq.heapify(heap)
+    while len(heap) > 1:
+        lo = heapq.heappop(heap)
+        hi = heapq.heappop(heap)
+        for pair in lo[1:]: pair[1] = '0' + pair[1]
+        for pair in hi[1:]: pair[1] = '1' + pair[1]
+        heapq.heappush(heap, [lo[0] + hi[0]] + lo[1:] + hi[1:])
+    return dict(sorted(heap[0][1:], key=lambda p: (len(p[-1]), p)))
+```
 - `create_huffman_encoding_dict(frequencies)`: ایجاد دیکشنری کدگذاری.
-- `save_encoding_table_to_csv(dictionary, filename)`: ذخیره جدول کدگذاری به CSV.
-- `generate_probability_table(frequencies)`: ایجاد جدول احتمالات.
 
 ### 📌 3. تبدیل متن به DNA (`3.ipynb`)
 📌 **توابع اصلی:**
+```python
+def binary_to_dna(binary_sequence):
+    mapping = {"00": "A", "01": "T", "10": "C", "11": "G"}
+    return "".join([mapping[binary_sequence[i:i+2]] for i in range(0, len(binary_sequence), 2)])
+```
 - `text_to_binary(text, encoding_dict)`: تبدیل متن به دودویی.
 - `binary_to_dna(binary_sequence)`: تبدیل داده‌ها به **DNA**.
-- `save_dna_sequence_to_file(dna_sequence, filename)`: ذخیره داده **DNA** در فایل متنی.
 
 ### 📌 4. نمایش درخت هافمن (`4.ipynb`)
 📌 **توابع اصلی:**
+```python
+def build_huffman_tree_graph(tree):
+    dot = graphviz.Digraph()
+    def add_nodes_edges(node, parent=None, edge_label=""):
+        if isinstance(node, list):
+            label = node[1] if isinstance(node[1], str) else ""
+            dot.node(str(id(node)), label)
+            if parent:
+                dot.edge(parent, str(id(node)), label=edge_label)
+            for i, child in enumerate(node[2:]):
+                add_nodes_edges(child, str(id(node)), str(i))
+    add_nodes_edges(tree)
+    return dot
+```
 - `build_huffman_tree_graph(tree)`: نمایش گرافیکی درخت هافمن.
-- `display_huffman_codes(codes)`: نمایش نگاشت کدهای هافمن.
 
 ### 📌 5. تشخیص و تصحیح خطا (`Main Retrieval.ipynb`)
 📌 **توابع اصلی:**
+```python
+def detect_and_correct_errors(encoded_data):
+    error_position = 0
+    for i in range(len(encoded_data)):
+        if encoded_data[i] == "1":
+            error_position ^= (i + 1)
+    if error_position:
+        encoded_data = list(encoded_data)
+        encoded_data[error_position - 1] = "0" if encoded_data[error_position - 1] == "1" else "1"
+    return "".join(encoded_data)
+```
 - `apply_hamming_code(data)`: اعمال کد همینگ.
 - `detect_and_correct_errors(encoded_data)`: شناسایی و اصلاح خطا.
-- `decode_hamming(encoded_data)`: رمزگشایی داده‌های تصحیح‌شده.
 
 ### 📌 6. ذخیره‌سازی نهایی داده‌ها (`main store.ipynb`)
 📌 **توابع اصلی:**
-- `segment_dna_sequence(dna_sequence, segment_size)`: تقسیم داده‌های DNA.
-- `save_segmented_dna_to_file(segments, filename)`: ذخیره بخش‌های داده.
-- `retrieve_and_reconstruct_data(segments)`: بازیابی داده‌ها.
-
----
-## ⚙️ نصب و پیش‌نیازها
-برای اجرای کدها، کتابخانه‌های زیر را نصب کنید:
-```bash
-pip install pandas numpy PyPDF2 graphviz colorama reportlab
+```python
+def segment_dna_sequence(dna_sequence, segment_size):
+    return [dna_sequence[i:i+segment_size] for i in range(0, len(dna_sequence), segment_size)]
 ```
-همچنین، برای اجرای فایل‌های `.ipynb` به **Jupyter Notebook** نیاز دارید.
+- `segment_dna_sequence(dna_sequence, segment_size)`: تقسیم داده‌های DNA.
 
 ---
-## 🚀 راهنمای استفاده
-1️⃣ **اجرای `1.ipynb`** برای پردازش ورودی و ایجاد جدول فرکانس.
-2️⃣ **اجرای `2.ipynb`** برای دریافت نگاشت کدگذاری هافمن.
-3️⃣ **اجرای `3.ipynb`** برای تبدیل متن به **DNA**.
-4️⃣ **اجرای `4.ipynb`** برای نمایش درخت هافمن.
-5️⃣ **اجرای `Main Retrieval.ipynb`** برای **تشخیص و تصحیح خطا**.
-6️⃣ **اجرای `main store.ipynb`** برای ذخیره‌سازی نهایی داده‌ها.
+## 👨‍💻 توسعه‌دهندگان
+📩 این پروژه به عنوان بخشی از **پایان‌نامه کارشناسی ارشد** درباره **ذخیره‌سازی داده در DNA** توسعه داده شده است.
 
----
-## 📊 نتایج
-✅ تبدیل موفقیت‌آمیز یک فایل متنی به **DNA**.
-✅ فشرده‌سازی داده‌ها با **کدگذاری هافمن**.
-✅ استفاده از **کد همینگ** برای **تشخیص و تصحیح خطا**.
-✅ بازیابی **دقیق و صحیح متن اصلی**.
 
----
